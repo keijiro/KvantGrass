@@ -28,8 +28,9 @@ Shader "Hidden/Kvant/Grass/Kernel"
     float2 _Extent;
     float3 _BaseScale;
     float2 _RandomScale;    // min, max
-    float4 _RotationNoise;  // x freq, y freq, amp, time
-    float4 _ScaleNoise;     // x freq, y freq, amp, time
+    float _RandomPitch;
+    float3 _RotationNoise;  // freq, amp, time
+    float2 _ScaleNoise;     // freq, amp
 
     // PRNG function.
     float nrand(float2 uv, float salt)
@@ -59,27 +60,44 @@ Shader "Hidden/Kvant/Grass/Kernel"
     float4 random_pitch(float2 uv)
     {
         float a1 = (nrand(uv, 4) - 0.5) * UNITY_PI * 2;
-        float a2 = (nrand(uv, 5) - 0.5) * UNITY_PI * 0.4;
+        float a2 = (nrand(uv, 5) - 0.5) * _RandomPitch;
         float sn1, cs1, sn2, cs2;
         sincos(a1 * 0.5, sn1, cs1);
         sincos(a2 * 0.5, sn2, cs2);
         return float4(float3(cs1, 0, sn1) * sn2, cs2);
     }
 
+    float3 get_position(float2 uv)
+    {
+        float x = (nrand(uv, 0) - 0.5) * _Extent.x;
+        float z = (frac(nrand(uv, 1) + _Time.x * 2.8) - 0.5) * _Extent.y;
+        return float3(x, 0, z);
+    }
+
     // Pass 0: Position kernel
     float4 frag_position(v2f_img i) : SV_Target
     {
         float2 uv = i.uv;
-        float x = (nrand(uv, 0) - 0.5) * _Extent.x;
-        float z = (nrand(uv, 1) - 0.5) * _Extent.y;
-        return float4(x, 0, z, nrand(uv, 2));
+        return float4(get_position(uv), nrand(uv, 2));
     }
 
     // Pass 1: Rotation kernel
     float4 frag_rotation(v2f_img i) : SV_Target
     {
         float2 uv = i.uv;
-        return qmul(random_pitch(uv), random_yaw(uv));
+
+        float4 r1 = random_yaw(uv);
+        float4 r2 = random_pitch(uv);
+
+        float x = (nrand(uv, 0) - 0.5) * _Extent.x;
+        float z = (nrand(uv, 1) - 0.5) * _Extent.y;
+        float a3 = cnoise(float3(x * 2.3, z * 2.3, 100 + _Time.x * 10)) * 1.2;
+
+        float sn, cs;
+        sincos(a3 * 0.5, sn, cs);
+        float4 r3 = float4(float3(1, 0, 0) * sn, cs);
+
+        return qmul(r3, qmul(r2, r1));
     }
 
     // Pass 2: Scale kernel
@@ -89,6 +107,10 @@ Shader "Hidden/Kvant/Grass/Kernel"
 
         // Random scale factor
         float vari = lerp(_RandomScale.x, _RandomScale.y, nrand(uv, 6));
+
+        float x = (nrand(uv, 0) - 0.5) * _Extent.x;
+        float z = (nrand(uv, 1) - 0.5) * _Extent.y;
+        vari += cnoise(float3(x, z, 0) * 0.5) * 1.4;
 
         return float4(_BaseScale * vari, nrand(uv, 7));
     }

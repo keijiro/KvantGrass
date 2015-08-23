@@ -27,6 +27,9 @@ namespace Kvant
             set { _extent = value; }
         }
 
+        [SerializeField]
+        float _randomPitchAngle = 45;
+
         #endregion
 
         #region Render Settings
@@ -158,6 +161,7 @@ namespace Kvant
         {
             var m = _kernelMaterial;
             m.SetVector("_Extent", _extent);
+            m.SetFloat("_RandomPitch", _randomPitchAngle * Mathf.Deg2Rad * 2);
             m.SetVector("_BaseScale", _baseScale);
             m.SetVector("_RandomScale", new Vector2(_minRandomScale, _maxRandomScale));
         }
