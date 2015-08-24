@@ -24,7 +24,7 @@ namespace Kvant
 
         public Vector2 extent {
             get { return _extent; }
-            set { _extent = value; }
+            set { _extent = value; _positionUpdateFlag = true; }
         }
 
         [SerializeField]
@@ -32,7 +32,7 @@ namespace Kvant
 
         public Vector2 offset {
             get { return _offset; }
-            set { _offset = value; }
+            set { _offset = value; _positionUpdateFlag = true; }
         }
 
         #endregion
@@ -88,7 +88,7 @@ namespace Kvant
 
         public Vector3 baseScale {
             get { return _baseScale; }
-            set { _baseScale = value; }
+            set { _baseScale = value; _scaleUpdateFlag = true; }
         }
 
         [SerializeField]
@@ -96,7 +96,7 @@ namespace Kvant
 
         public float minRandomScale {
             get { return _minRandomScale; }
-            set { _minRandomScale = value; }
+            set { _minRandomScale = value; _scaleUpdateFlag = true; }
         }
 
         [SerializeField]
@@ -104,7 +104,7 @@ namespace Kvant
 
         public float maxRandomScale {
             get { return _maxRandomScale; }
-            set { _maxRandomScale = value; }
+            set { _maxRandomScale = value; _scaleUpdateFlag = true; }
         }
 
         [SerializeField]
@@ -112,7 +112,7 @@ namespace Kvant
 
         public float scaleNoiseAmplitude {
             get { return _scaleNoiseAmplitude; }
-            set { _scaleNoiseAmplitude = value; }
+            set { _scaleNoiseAmplitude = value; _scaleUpdateFlag = true; }
         }
 
         [SerializeField]
@@ -120,7 +120,7 @@ namespace Kvant
 
         public float scaleNoiseFrequency {
             get { return _scaleNoiseFrequency; }
-            set { _scaleNoiseFrequency = value; }
+            set { _scaleNoiseFrequency = value; _scaleUpdateFlag = true; }
         }
 
         #endregion
@@ -187,6 +187,9 @@ namespace Kvant
         Material _kernelMaterial;
 
         float _rotationNoiseTime;
+
+        bool _positionUpdateFlag;
+        bool _scaleUpdateFlag;
         bool _needsReset = true;
 
         public int InstancePerDraw {
@@ -257,8 +260,6 @@ namespace Kvant
             _scaleBuffer = CreateBuffer();
 
             if (!_kernelMaterial) _kernelMaterial = CreateMaterial(_kernelShader);
-
-            _needsReset = false;
         }
 
         #endregion
@@ -288,9 +289,14 @@ namespace Kvant
 
             // Call the kernels.
             UpdateKernelShader();
-            Graphics.Blit(null, _positionBuffer, _kernelMaterial, 0);
+
+            if (_needsReset || _positionUpdateFlag)
+                Graphics.Blit(null, _positionBuffer, _kernelMaterial, 0);
+
             Graphics.Blit(null, _rotationBuffer, _kernelMaterial, 1);
-            Graphics.Blit(null, _scaleBuffer,    _kernelMaterial, 2);
+
+            if (_needsReset || _scaleUpdateFlag)
+                Graphics.Blit(null, _scaleBuffer,    _kernelMaterial, 2);
 
             // Make a material property block for the following drawcalls.
             var props = new MaterialPropertyBlock();
@@ -315,6 +321,11 @@ namespace Kvant
                     material, 0, null, 0, props,
                     _castShadows, _receiveShadows);
             }
+
+            // Clear flag variables.
+            _positionUpdateFlag = true;
+            _scaleUpdateFlag = true;
+            _needsReset = false;
         }
 
         #endregion
