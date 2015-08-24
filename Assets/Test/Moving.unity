@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
   m_Fog: 1
-  m_FogColor: {r: .786764741, g: .913807154, b: 1, a: 0}
+  m_FogColor: {r: .683823526, g: .872196794, b: 1, a: 0}
   m_FogMode: 3
-  m_FogDensity: .0500000007
+  m_FogDensity: .0299999993
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: .211999997, g: .226999998, b: .259000003, a: 1}
@@ -141,7 +141,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: .786764741, g: .913807154, b: 1, a: 0}
+  m_BackGroundColor: {r: .683823526, g: .872196794, b: 1, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10593b7d510b64560a297a8af1356dcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorTemp: .75
+  _colorTemp: .569999993
   _colorTint: .189999998
   _toneMapping: 1
   _exposure: 2
@@ -259,14 +259,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
+      value: .0500000007
+      inSlope: .877464116
+      outSlope: .877464116
       tangentMode: 0
     - time: 1
       value: 1
-      inSlope: 1
-      outSlope: 0
+      inSlope: .938682497
+      outSlope: .938682497
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -275,13 +275,13 @@ MonoBehaviour:
     m_Curve:
     - time: 0
       value: 0
-      inSlope: 0
-      outSlope: 1
+      inSlope: .803632975
+      outSlope: .803632975
       tangentMode: 0
     - time: 1
       value: 1
-      inSlope: 1
-      outSlope: 0
+      inSlope: .884078741
+      outSlope: .884078741
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -290,13 +290,13 @@ MonoBehaviour:
     m_Curve:
     - time: 0
       value: 0
-      inSlope: 0
-      outSlope: 1
+      inSlope: 1.10035038
+      outSlope: 1.10035038
       tangentMode: 0
     - time: 1
       value: 1
-      inSlope: 1
-      outSlope: 0
+      inSlope: 1.20875633
+      outSlope: 1.20875633
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -367,6 +367,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 580364647}
   - 114: {fileID: 580364646}
+  - 114: {fileID: 580364648}
   m_Layer: 0
   m_Name: Grass
   m_TagString: Untagged
@@ -385,16 +386,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b91f4970bd6b4ce490e72b8f4797b81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _density: 50
+  _density: 400
   _extent: {x: 20, y: 20}
-  _randomPitchAngle: 37.4000015
-  _baseScale: {x: 1, y: 1.5, z: 1}
-  _minRandomScale: 1
-  _maxRandomScale: 2
-  _material: {fileID: 0}
+  _offset: {x: 0, y: 0}
+  _randomPitchAngle: 36.4000015
+  _noisePitchAngle: 18.8999996
+  _rotationNoiseFrequency: 1.26999998
+  _rotationNoiseSpeed: .879999995
+  _rotationNoiseAxis: {x: 1, y: 0, z: 0}
+  _baseScale: {x: 1, y: 2, z: 1}
+  _minRandomScale: 1.34733176
+  _maxRandomScale: 1.58320189
+  _scaleNoiseAmplitude: .460000008
+  _scaleNoiseFrequency: .879999995
+  _material: {fileID: 2100000, guid: 7711acfb2b5e944dca6694790187339c, type: 2}
   _castShadows: 1
   _receiveShadows: 1
-  _debug: 0
   _defaultShapes:
   - {fileID: 4300002, guid: fc6a34e7a0cb449f5b40f31834051a3b, type: 3}
   - {fileID: 4300004, guid: fc6a34e7a0cb449f5b40f31834051a3b, type: 3}
@@ -412,6 +419,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &580364648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 580364645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4d9cfcdfc2440f4ad305a6296d9d87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yawAngle: 90
+  speed: 4
 --- !u!1 &639827954
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,8 +558,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 6
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.39999998
+  m_Color: {r: 1, g: .994929016, b: .926470578, a: 1}
+  m_Intensity: 1.29999995
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10

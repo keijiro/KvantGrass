@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Default Grass
+  m_Name: Test
   m_Shader: {fileID: 4800000, guid: da73fcaab82534881adec3f5f772b88a, type: 3}
   m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 5
@@ -61,7 +61,7 @@ Material:
       data:
         first:
           name: _Smoothness
-        second: .400000006
+        second: .425000012
       data:
         first:
           name: _Metallic
@@ -73,23 +73,23 @@ Material:
       data:
         first:
           name: _NormalScale
-        second: .5
+        second: .649999976
       data:
         first:
           name: _HeightToOcc
-        second: 2
+        second: 1.78571427
       data:
         first:
           name: _OccExp
-        second: 2
+        second: 3.33999991
       data:
         first:
           name: _OccToColor
-        second: .5
+        second: .477999985
       data:
         first:
           name: _OccHeight
-        second: .5
+        second: .560000002
       data:
         first:
           name: _OcclusionStr
@@ -98,7 +98,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .16446799, g: .860294104, b: .313232273, a: 1}
+        second: {r: .128676489, g: .875, b: .288238466, a: 1}
       data:
         first:
           name: _Color2

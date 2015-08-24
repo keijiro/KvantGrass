@@ -1,13 +1,13 @@
 ﻿//
-// Scroller script for Wall
+// Scroller script for Grass
 //
 using UnityEngine;
 
 namespace Kvant
 {
-    [RequireComponent(typeof(Wall))]
-    [AddComponentMenu("Kvant/Wall Scroller")]
-    public class WallScroller : MonoBehaviour
+    [RequireComponent(typeof(Grass))]
+    [AddComponentMenu("Kvant/Grass Scroller")]
+    public class GrassScroller : MonoBehaviour
     {
         public float yawAngle;
         public float speed;
@@ -16,7 +16,7 @@ namespace Kvant
         {
             var r = yawAngle * Mathf.Deg2Rad;
             var dir = new Vector2(Mathf.Cos(r), Mathf.Sin(r));
-            GetComponent<Wall>().offset += dir * speed * Time.deltaTime;
+            GetComponent<Grass>().offset += dir * speed * Time.deltaTime;
         }
     }
 }
