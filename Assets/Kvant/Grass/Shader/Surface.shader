@@ -8,14 +8,14 @@
 //
 // Position kernel outputs:
 // .xyz = position
-// .w   = random value (0-1)
+// .w   = 0
 //
 // Rotation kernel outputs:
 // .xyzw = rotation (quaternion)
 //
 // Scale kernel outputs:
 // .xyz = scale factor
-// .w   = 0
+// .w   = random value (0-1)
 //
 Shader "Kvant/Grass/Surface"
 {
@@ -118,7 +118,7 @@ Shader "Kvant/Grass/Surface"
         #if _NORMALMAP
             v.tangent.xyz = rotate_vector(v.tangent.xyz, r);
         #endif
-            v.color = lerp(_Color, _Color2, p.w * _ColorMode);
+            v.color = lerp(_Color, _Color2, s.w * _ColorMode);
         }
 
         void surf(Input IN, inout SurfaceOutputStandard o)

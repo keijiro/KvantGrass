@@ -13,7 +13,7 @@ namespace Kvant
         #region Basic Properties
 
         [SerializeField]
-        float _density = 50;
+        float _density = 400;
 
         public float density {
             get { return _density; }
@@ -28,22 +28,35 @@ namespace Kvant
         }
 
         [SerializeField]
-        float _randomPitchAngle = 45;
+        Vector2 _offset;
+
+        public Vector2 offset {
+            get { return _offset; }
+            set { _offset = value; }
+        }
 
         #endregion
 
-        #region Noise Parameters
+        #region Rotation Parameters
 
-        [SerializeField]
-        float _rotationNoiseAmplitude = 30.0f;
+        [SerializeField, Range(0, 90)]
+        float _randomPitchAngle = 45;
 
-        public float rotationNoiseAmplitude {
-            get { return _rotationNoiseAmplitude; }
-            set { _rotationNoiseAmplitude = value; }
+        public float randomPitchAngle {
+            get { return _randomPitchAngle; }
+            set { _randomPitchAngle = value; }
+        }
+
+        [SerializeField, Range(0, 90)]
+        float _noisePitchAngle = 30.0f;
+
+        public float noisePitchAngle {
+            get { return _noisePitchAngle; }
+            set { _noisePitchAngle = value; }
         }
 
         [SerializeField]
-        float _rotationNoiseFrequency = 2.3f;
+        float _rotationNoiseFrequency = 1.0f;
 
         public float rotationNoiseFrequency {
             get { return _rotationNoiseFrequency; }
@@ -51,7 +64,7 @@ namespace Kvant
         }
 
         [SerializeField]
-        float _rotationNoiseSpeed = 1.0f;
+        float _rotationNoiseSpeed = 0.5f;
 
         public float rotationNoiseSpeed {
             get { return _rotationNoiseSpeed; }
@@ -59,24 +72,16 @@ namespace Kvant
         }
 
         [SerializeField]
-        float _scaleNoiseAmplitude = 0.5f;
+        Vector3 _rotationNoiseAxis = Vector3.right;
 
-        public float scaleNoiseAmplitude {
-            get { return _scaleNoiseAmplitude; }
-            set { _scaleNoiseAmplitude = value; }
-        }
-
-        [SerializeField]
-        float _scaleNoiseFrequency = 0.5f;
-
-        public float scaleNoiseFrequency {
-            get { return _scaleNoiseFrequency; }
-            set { _scaleNoiseFrequency = value; }
+        public Vector3 rotationNoiseAxis {
+            get { return _rotationNoiseAxis; }
+            set { _rotationNoiseAxis = value; }
         }
 
         #endregion
 
-        #region Render Settings
+        #region Scale Parameters
 
         [SerializeField]
         Vector3 _baseScale = Vector3.one;
@@ -101,6 +106,26 @@ namespace Kvant
             get { return _maxRandomScale; }
             set { _maxRandomScale = value; }
         }
+
+        [SerializeField]
+        float _scaleNoiseAmplitude = 0.5f;
+
+        public float scaleNoiseAmplitude {
+            get { return _scaleNoiseAmplitude; }
+            set { _scaleNoiseAmplitude = value; }
+        }
+
+        [SerializeField]
+        float _scaleNoiseFrequency = 0.5f;
+
+        public float scaleNoiseFrequency {
+            get { return _scaleNoiseFrequency; }
+            set { _scaleNoiseFrequency = value; }
+        }
+
+        #endregion
+
+        #region Render Settings
 
         [SerializeField]
         Material _material;
@@ -144,13 +169,6 @@ namespace Kvant
 
         #endregion
 
-        #region Editor Properties
-
-        [SerializeField]
-        bool _debug;
-
-        #endregion
-
         #region Built-in Resources
 
         [SerializeField] Mesh[] _defaultShapes;
@@ -164,8 +182,11 @@ namespace Kvant
         RenderTexture _positionBuffer;
         RenderTexture _rotationBuffer;
         RenderTexture _scaleBuffer;
+
         BulkMesh _bulkMesh;
         Material _kernelMaterial;
+
+        float _rotationNoiseTime;
         bool _needsReset = true;
 
         public int InstancePerDraw {
@@ -173,7 +194,10 @@ namespace Kvant
         }
 
         public int DrawCount {
-            get { return 40; }
+            get {
+                var c = _density * _extent.x * _extent.y / InstancePerDraw;
+                return Mathf.Max(1, Mathf.CeilToInt(c));
+            }
         }
 
         #endregion
@@ -204,12 +228,16 @@ namespace Kvant
         void UpdateKernelShader()
         {
             var m = _kernelMaterial;
+
             m.SetVector("_Extent", _extent);
-            m.SetFloat("_RandomPitch", _randomPitchAngle * Mathf.Deg2Rad * 2);
+            m.SetVector("_Scroll", new Vector2(_offset.x / _extent.x, _offset.y / _extent.y));
+
+            m.SetFloat("_RandomPitch", _randomPitchAngle * Mathf.Deg2Rad);
+            m.SetVector("_RotationNoise", new Vector3(_rotationNoiseFrequency, _noisePitchAngle * Mathf.Deg2Rad, _rotationNoiseTime));
+            m.SetVector("_RotationAxis", _rotationNoiseAxis.normalized);
+
             m.SetVector("_BaseScale", _baseScale);
             m.SetVector("_RandomScale", new Vector2(_minRandomScale, _maxRandomScale));
-            m.SetVector("_RotationNoise", new Vector3(_rotationNoiseFrequency, _rotationNoiseAmplitude * Mathf.Deg2Rad, _rotationNoiseSpeed));
-            m.SetVector("_RotationAxis", Vector3.forward);
             m.SetVector("_ScaleNoise", new Vector2(_scaleNoiseFrequency, _scaleNoiseAmplitude));
         }
 
@@ -255,11 +283,14 @@ namespace Kvant
         {
             if (_needsReset) ResetResources();
 
+            // Advance the time variables.
+            _rotationNoiseTime += _rotationNoiseSpeed * Time.deltaTime;
+
             // Call the kernels.
             UpdateKernelShader();
             Graphics.Blit(null, _positionBuffer, _kernelMaterial, 0);
-            Graphics.Blit(_positionBuffer, _rotationBuffer, _kernelMaterial, 1);
-            Graphics.Blit(_positionBuffer, _scaleBuffer,    _kernelMaterial, 2);
+            Graphics.Blit(null, _rotationBuffer, _kernelMaterial, 1);
+            Graphics.Blit(null, _scaleBuffer,    _kernelMaterial, 2);
 
             // Make a material property block for the following drawcalls.
             var props = new MaterialPropertyBlock();

@@ -1,33 +1,23 @@
 ﻿//
 // GPGPU kernels for Grass
 //
-// The position buffer is given as _MainTex
-// in the rotation and scale kernels.
-//
 // Position kernel outputs:
 // .xyz = position
-// .w   = random value (0-1)
+// .w   = 0
 //
 // Rotation kernel outputs:
 // .xyzw = rotation (quaternion)
 //
 // Scale kernel outputs:
 // .xyz = scale factor
-// .w   = 0
+// .w   = random value (0-1)
 //
 Shader "Hidden/Kvant/Grass/Kernel"
 {
-    Properties
-    {
-        _MainTex("-", 2D) = ""{}
-    }
-
     CGINCLUDE
 
     #include "UnityCG.cginc"
     #include "ClassicNoise3D.cginc"
-
-    sampler2D _MainTex;
 
     float2 _Extent;
     float2 _Scroll;
@@ -57,10 +47,23 @@ Shader "Hidden/Kvant/Grass/Kernel"
         );
     }
 
+    // Get the point bound to the UV
+    float2 get_point(float2 uv)
+    {
+        float2 p = float2(nrand(uv, 0), nrand(uv, 1));
+        return (p - 0.5) * _Extent;
+    }
+
+    float2 get_point_offs(float2 uv, float2 offs)
+    {
+        float2 p = float2(nrand(uv, 0), nrand(uv, 1));
+        return (frac(p + offs) - 0.5) * _Extent;
+    }
+
     // Random rotation around the Y axis
     float4 random_yaw(float2 uv)
     {
-        float a = (nrand(uv, 3) - 0.5) * UNITY_PI * 2;
+        float a = (nrand(uv, 2) - 0.5) * UNITY_PI * 2;
         float sn, cs;
         sincos(a * 0.5, sn, cs);
         return float4(0, sn, 0, cs);
@@ -69,8 +72,8 @@ Shader "Hidden/Kvant/Grass/Kernel"
     // Random pitch rotation
     float4 random_pitch(float2 uv)
     {
-        float a1 = (nrand(uv, 4) - 0.5) * UNITY_PI * 2;
-        float a2 = (nrand(uv, 5) - 0.5) * _RandomPitch;
+        float a1 = (nrand(uv, 3) - 0.5) * UNITY_PI * 2;
+        float a2 = (nrand(uv, 4) - 0.5) * _RandomPitch * 2;
         float sn1, cs1, sn2, cs2;
         sincos(a1 * 0.5, sn1, cs1);
         sincos(a2 * 0.5, sn2, cs2);
@@ -80,9 +83,8 @@ Shader "Hidden/Kvant/Grass/Kernel"
     // Pass 0: Position kernel
     float4 frag_position(v2f_img i) : SV_Target
     {
-        float2 p = float2(nrand(i.uv, 0), nrand(i.uv, 1));
-        p = (frac(p + _Scroll) - 0.5) * _Extent;
-        return float4(p.x, 0, p.y, nrand(i.uv, 2));
+        float2 p = get_point_offs(i.uv, _Scroll);
+        return float4(p.x, 0, p.y, 0);
     }
 
     // Pass 1: Rotation kernel
@@ -92,9 +94,9 @@ Shader "Hidden/Kvant/Grass/Kernel"
         float4 r2 = random_pitch(i.uv);
 
         // Noise to rotation
-        float4 np = tex2D(_MainTex, i.uv) * _RotationNoise.x;
-        float3 no = float3(0, _Time.y * _RotationNoise.z, 0);
-        float na = cnoise(np + no) * _RotationNoise.y;
+        float2 np = get_point(i.uv) * _RotationNoise.x;
+        float3 nc = float3(np.x, np.y, _RotationNoise.z);
+        float na = cnoise(nc) * _RotationNoise.y;
 
         // Getting a quaternion of it
         float sn, cs;
@@ -108,14 +110,14 @@ Shader "Hidden/Kvant/Grass/Kernel"
     float4 frag_scale(v2f_img i) : SV_Target
     {
         // Random scale factor
-        float s = lerp(_RandomScale.x, _RandomScale.y, nrand(i.uv, 6));
+        float s1 = lerp(_RandomScale.x, _RandomScale.y, nrand(i.uv, 5));
 
         // Noise to scale factor
-        float4 p = tex2D(_MainTex, i.uv) * _ScaleNoise.x;
-        float3 magic = float3(0, -13.7, 0);
-        s += cnoise(p + magic) * _ScaleNoise.y;
+        float2 np = get_point(i.uv) * _ScaleNoise.x;
+        float3 nc = float3(np.x, np.y, -13.7 /* magic num */);
+        float s2 = cnoise(nc) * _ScaleNoise.y;
 
-        return float4(_BaseScale * s, 0);
+        return float4(_BaseScale * (s1 + s2), nrand(i.uv, 6));
     }
 
     ENDCG
