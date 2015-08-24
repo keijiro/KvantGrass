@@ -7,7 +7,9 @@ KvantGrass is an animating grass shader for Unity.
 
 ![animation](https://33.media.tumblr.com/9fafc9748b1f1709b9a2c810586af0d7/tumblr_ntjejw1zHe1qio469o1_400.gif)
 
-Don't expect too much! This shader might be not useful in your project because of its lack of versatility.
+Don't expect too much! This shader might be useless for your production
+because of its lack of versatility. Using this just for an experiments
+or prototyping is better idea.
 
 System Requirements
 -------------------
