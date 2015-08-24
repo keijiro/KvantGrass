@@ -37,8 +37,8 @@ Shader "Kvant/Grass/Surface"
         _NormalMap    ("-", 2D) = "bump"{}
         _NormalScale  ("-", Range(0,2)) = 1
 
-        _OccHeight    ("-", Float) = 1
-        _HeightToOcc  ("-", Float) = 1
+        _OccHeight    ("-", Float) = 0.25
+        _HeightToOcc  ("-", Float) = 4.0
         _OccExp       ("-", Range(1,10)) = 2
         _OccToColor   ("-", Range(0,1)) = 0.2
     }
@@ -110,8 +110,8 @@ Shader "Kvant/Grass/Surface"
 
             v.vertex.xyz = rotate_vector(v.vertex.xyz * s.xyz, r);
 
-            data.occlusion = saturate(v.vertex.y * _HeightToOcc);
-            data.occlusion = pow(data.occlusion, _OccExp);
+            float occ = saturate(v.vertex.y * _HeightToOcc);
+            data.occlusion = pow(occ, _OccExp);
 
             v.vertex.xyz += p.xyz;
             v.normal = rotate_vector(v.normal, r);
@@ -138,9 +138,9 @@ Shader "Kvant/Grass/Surface"
             o.Normal = UnpackScaleNormal(n, _NormalScale);
         #endif
 
-            o.Occlusion = IN.occlusion;
             o.Metallic = _Metallic;
             o.Smoothness = _Smoothness;
+            o.Occlusion = IN.occlusion;
         }
 
         ENDCG

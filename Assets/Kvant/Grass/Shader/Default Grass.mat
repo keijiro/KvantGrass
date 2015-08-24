@@ -31,6 +31,13 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
+          name: _OcclusionMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _PositionTex
         second:
           m_Texture: {fileID: 0}
@@ -50,13 +57,6 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _OcclusionMap
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
@@ -64,12 +64,12 @@ Material:
         second: .400000006
       data:
         first:
-          name: _ColorMode
-        second: 1
-      data:
-        first:
           name: _Metallic
         second: 0
+      data:
+        first:
+          name: _ColorMode
+        second: 1
       data:
         first:
           name: _NormalScale
@@ -77,19 +77,19 @@ Material:
       data:
         first:
           name: _HeightToOcc
-        second: 1.69491529
+        second: 1.66666663
       data:
         first:
           name: _OccExp
-        second: 1.79999995
+        second: 1.46000004
       data:
         first:
           name: _OccToColor
-        second: .421999991
+        second: .472000003
       data:
         first:
           name: _OccHeight
-        second: .589999974
+        second: .600000024
       data:
         first:
           name: _OcclusionStr
