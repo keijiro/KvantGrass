@@ -47,7 +47,7 @@ Material:
         first:
           name: _OcclusionMap
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 967037d02f0b44d5ebad8b9fab4df43a, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -135,4 +135,4 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .0661764741, g: .0397058837, b: 0, a: 1}
+        second: {r: .0922413915, g: .125, b: 0, a: 1}

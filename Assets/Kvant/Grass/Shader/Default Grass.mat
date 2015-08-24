@@ -76,6 +76,22 @@ Material:
         second: .5
       data:
         first:
+          name: _HeightToOcc
+        second: 1.69491529
+      data:
+        first:
+          name: _OccExp
+        second: 1.79999995
+      data:
+        first:
+          name: _OccToColor
+        second: .421999991
+      data:
+        first:
+          name: _OccHeight
+        second: .589999974
+      data:
+        first:
           name: _OcclusionStr
         second: 1
     m_Colors:

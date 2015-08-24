@@ -16,12 +16,13 @@ namespace Kvant
         MaterialProperty _albedoMap;
         MaterialProperty _normalMap;
         MaterialProperty _normalScale;
-        MaterialProperty _occlusionMap;
-        MaterialProperty _occlusionStr;
+        MaterialProperty _occHeight;
+        MaterialProperty _heightToOcc;
+        MaterialProperty _occExp;
+        MaterialProperty _occToColor;
 
         static GUIContent _albedoText    = new GUIContent("Albedo");
         static GUIContent _normalMapText = new GUIContent("Normal Map");
-        static GUIContent _occlusionText = new GUIContent("Occlusion");
 
         bool _initial = true;
 
@@ -35,8 +36,10 @@ namespace Kvant
             _albedoMap    = FindProperty("_MainTex", props);
             _normalMap    = FindProperty("_NormalMap", props);
             _normalScale  = FindProperty("_NormalScale", props);
-            _occlusionMap = FindProperty("_OcclusionMap", props);
-            _occlusionStr = FindProperty("_OcclusionStr", props);
+            _occHeight    = FindProperty("_OccHeight", props);
+            _heightToOcc  = FindProperty("_HeightToOcc", props);
+            _occExp       = FindProperty("_OccExp", props);
+            _occToColor   = FindProperty("_OccToColor", props);
         }
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -79,10 +82,15 @@ namespace Kvant
 
             materialEditor.TexturePropertySingleLine(_albedoText, _albedoMap, null);
             materialEditor.TexturePropertySingleLine(_normalMapText, _normalMap, _normalMap.textureValue ? _normalScale : null);
-            materialEditor.TexturePropertySingleLine(_occlusionText, _occlusionMap, _occlusionMap.textureValue ? _occlusionStr : null);
 			materialEditor.TextureScaleOffsetProperty(_albedoMap);
 
             EditorGUILayout.Space();
+
+			materialEditor.ShaderProperty(_occHeight, "Occlusion Height");
+            _heightToOcc.floatValue = 1.0f / _occHeight.floatValue;
+
+			materialEditor.ShaderProperty(_occExp, "Occ Exponent");
+			materialEditor.ShaderProperty(_occToColor, "Occ To Color");
 
             return EditorGUI.EndChangeCheck();
         }
@@ -91,7 +99,6 @@ namespace Kvant
         {
             SetKeyword(material, "_ALBEDOMAP", material.GetTexture("_MainTex"));
             SetKeyword(material, "_NORMALMAP", material.GetTexture("_NormalMap"));
-            SetKeyword(material, "_OCCLUSIONMAP", material.GetTexture("_OcclusionMap"));
         }
 
         static void SetKeyword(Material m, string keyword, bool state)

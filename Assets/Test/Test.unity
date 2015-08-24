@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fc18a55c333d51489e5ee49b3cbff50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _falloff: .340000004
+  _falloff: .400000006
   _shader: {fileID: 4800000, guid: 89a223cbeee1935419811f8736c0a9b3, type: 3}
 --- !u!114 &46550320
 MonoBehaviour:
@@ -253,7 +253,7 @@ MonoBehaviour:
   _colorTemp: .75
   _colorTint: .189999998
   _toneMapping: 1
-  _exposure: 1.53999996
+  _exposure: 2
   _saturation: 1
   _rCurve:
     serializedVersion: 2

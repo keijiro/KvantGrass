@@ -36,8 +36,11 @@ Shader "Kvant/Grass/Surface"
         _MainTex      ("-", 2D) = "white"{}
         _NormalMap    ("-", 2D) = "bump"{}
         _NormalScale  ("-", Range(0,2)) = 1
-        _OcclusionMap ("-", 2D) = "white"{}
-        _OcclusionStr ("-", Range(0,1)) = 1
+
+        _OccHeight    ("-", Float) = 1
+        _HeightToOcc  ("-", Float) = 1
+        _OccExp       ("-", Range(1,10)) = 2
+        _OccToColor   ("-", Range(0,1)) = 0.2
     }
     SubShader
     {
@@ -48,7 +51,6 @@ Shader "Kvant/Grass/Surface"
         #pragma surface surf Standard vertex:vert nolightmap addshadow
         #pragma shader_feature _ALBEDOMAP
         #pragma shader_feature _NORMALMAP
-        #pragma shader_feature _OCCLUSIONMAP
         #pragma target 3.0
 
         sampler2D _PositionTex;
@@ -66,8 +68,10 @@ Shader "Kvant/Grass/Surface"
         sampler2D _MainTex;
         sampler2D _NormalMap;
         half _NormalScale;
-        sampler2D _OcclusionMap;
-        half _OcclusionStr;
+
+        half _HeightToOcc;
+        half _OccExp;
+        half _OccToColor;
 
         // Quaternion multiplication.
         // http://mathworld.wolfram.com/Quaternion.html
@@ -91,24 +95,30 @@ Shader "Kvant/Grass/Surface"
         {
             float2 uv_MainTex;
             half4 color : COLOR;
+            half occlusion;
         };
 
-        void vert(inout appdata_full v)
+        void vert(inout appdata_full v, out Input data)
         {
-            float occ = v.vertex.y;
+            UNITY_INITIALIZE_OUTPUT(Input, data);
+
             float4 uv = float4(v.texcoord1.xy + _BufferOffset, 0, 0);
 
             float4 p = tex2Dlod(_PositionTex, uv);
             float4 r = tex2Dlod(_RotationTex, uv);
             float4 s = tex2Dlod(_ScaleTex, uv);
 
-            v.vertex.xyz = rotate_vector(v.vertex.xyz * s.xyz, r) + p.xyz;
+            v.vertex.xyz = rotate_vector(v.vertex.xyz * s.xyz, r);
+
+            data.occlusion = saturate(v.vertex.y * _HeightToOcc);
+            data.occlusion = pow(data.occlusion, _OccExp);
+
+            v.vertex.xyz += p.xyz;
             v.normal = rotate_vector(v.normal, r);
         #if _NORMALMAP
             v.tangent.xyz = rotate_vector(v.tangent.xyz, r);
         #endif
             v.color = lerp(_Color, _Color2, p.w * _ColorMode);
-            v.color *= pow(saturate(occ * 3.7), 2);
         }
 
         void surf(Input IN, inout SurfaceOutputStandard o)
@@ -121,18 +131,14 @@ Shader "Kvant/Grass/Surface"
             o.Albedo = IN.color.rgb;
             o.Alpha = IN.color.a;
         #endif
+            o.Albedo = lerp(o.Albedo, 0, (1.0 - IN.occlusion) * _OccToColor);
 
         #if _NORMALMAP
             half4 n = tex2D(_NormalMap, IN.uv_MainTex);
             o.Normal = UnpackScaleNormal(n, _NormalScale);
         #endif
 
-        #if _OCCLUSIONMAP
-            half4 occ = tex2D(_OcclusionMap, IN.uv_MainTex);
-            o.Occlusion = lerp((half4)1, occ, _OcclusionStr);
-        #endif
-            o.Occlusion = saturate(abs(IN.color.a));
-
+            o.Occlusion = IN.occlusion;
             o.Metallic = _Metallic;
             o.Smoothness = _Smoothness;
         }
