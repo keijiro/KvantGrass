@@ -32,6 +32,50 @@ namespace Kvant
 
         #endregion
 
+        #region Noise Parameters
+
+        [SerializeField]
+        float _rotationNoiseAmplitude = 30.0f;
+
+        public float rotationNoiseAmplitude {
+            get { return _rotationNoiseAmplitude; }
+            set { _rotationNoiseAmplitude = value; }
+        }
+
+        [SerializeField]
+        float _rotationNoiseFrequency = 2.3f;
+
+        public float rotationNoiseFrequency {
+            get { return _rotationNoiseFrequency; }
+            set { _rotationNoiseFrequency = value; }
+        }
+
+        [SerializeField]
+        float _rotationNoiseSpeed = 1.0f;
+
+        public float rotationNoiseSpeed {
+            get { return _rotationNoiseSpeed; }
+            set { _rotationNoiseSpeed = value; }
+        }
+
+        [SerializeField]
+        float _scaleNoiseAmplitude = 0.5f;
+
+        public float scaleNoiseAmplitude {
+            get { return _scaleNoiseAmplitude; }
+            set { _scaleNoiseAmplitude = value; }
+        }
+
+        [SerializeField]
+        float _scaleNoiseFrequency = 0.5f;
+
+        public float scaleNoiseFrequency {
+            get { return _scaleNoiseFrequency; }
+            set { _scaleNoiseFrequency = value; }
+        }
+
+        #endregion
+
         #region Render Settings
 
         [SerializeField]
@@ -164,6 +208,9 @@ namespace Kvant
             m.SetFloat("_RandomPitch", _randomPitchAngle * Mathf.Deg2Rad * 2);
             m.SetVector("_BaseScale", _baseScale);
             m.SetVector("_RandomScale", new Vector2(_minRandomScale, _maxRandomScale));
+            m.SetVector("_RotationNoise", new Vector3(_rotationNoiseFrequency, _rotationNoiseAmplitude * Mathf.Deg2Rad, _rotationNoiseSpeed));
+            m.SetVector("_RotationAxis", Vector3.forward);
+            m.SetVector("_ScaleNoise", new Vector2(_scaleNoiseFrequency, _scaleNoiseAmplitude));
         }
 
         void ResetResources()
@@ -211,8 +258,8 @@ namespace Kvant
             // Call the kernels.
             UpdateKernelShader();
             Graphics.Blit(null, _positionBuffer, _kernelMaterial, 0);
-            Graphics.Blit(null, _rotationBuffer, _kernelMaterial, 1);
-            Graphics.Blit(null, _scaleBuffer,    _kernelMaterial, 2);
+            Graphics.Blit(_positionBuffer, _rotationBuffer, _kernelMaterial, 1);
+            Graphics.Blit(_positionBuffer, _scaleBuffer,    _kernelMaterial, 2);
 
             // Make a material property block for the following drawcalls.
             var props = new MaterialPropertyBlock();

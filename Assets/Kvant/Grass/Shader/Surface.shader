@@ -15,7 +15,7 @@
 //
 // Scale kernel outputs:
 // .xyz = scale factor
-// .w   = random value (0-1)
+// .w   = 0
 //
 Shader "Kvant/Grass/Surface"
 {
