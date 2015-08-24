@@ -17,7 +17,6 @@ namespace Kvant
         MaterialProperty _normalMap;
         MaterialProperty _normalScale;
         MaterialProperty _occHeight;
-        MaterialProperty _heightToOcc;
         MaterialProperty _occExp;
         MaterialProperty _occToColor;
 
@@ -28,18 +27,17 @@ namespace Kvant
 
         void FindProperties(MaterialProperty[] props)
         {
-            _colorMode    = FindProperty("_ColorMode", props);
-            _color        = FindProperty("_Color", props);
-            _color2       = FindProperty("_Color2", props);
-            _metallic     = FindProperty("_Metallic", props);
-            _smoothness   = FindProperty("_Smoothness", props);
-            _albedoMap    = FindProperty("_MainTex", props);
-            _normalMap    = FindProperty("_NormalMap", props);
-            _normalScale  = FindProperty("_NormalScale", props);
-            _occHeight    = FindProperty("_OccHeight", props);
-            _heightToOcc  = FindProperty("_HeightToOcc", props);
-            _occExp       = FindProperty("_OccExp", props);
-            _occToColor   = FindProperty("_OccToColor", props);
+            _colorMode   = FindProperty("_ColorMode", props);
+            _color       = FindProperty("_Color", props);
+            _color2      = FindProperty("_Color2", props);
+            _metallic    = FindProperty("_Metallic", props);
+            _smoothness  = FindProperty("_Smoothness", props);
+            _albedoMap   = FindProperty("_MainTex", props);
+            _normalMap   = FindProperty("_NormalMap", props);
+            _normalScale = FindProperty("_NormalScale", props);
+            _occHeight   = FindProperty("_OccHeight", props);
+            _occExp      = FindProperty("_OccExp", props);
+            _occToColor  = FindProperty("_OccToColor", props);
         }
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -48,7 +46,7 @@ namespace Kvant
 
             if (ShaderPropertiesGUI(materialEditor) || _initial)
                 foreach (Material m in materialEditor.targets)
-                    SetMaterialKeywords(m);
+                    CompleteMaterialChanges(m);
 
             _initial = false;
         }
@@ -82,21 +80,22 @@ namespace Kvant
 
             materialEditor.TexturePropertySingleLine(_albedoText, _albedoMap, null);
             materialEditor.TexturePropertySingleLine(_normalMapText, _normalMap, _normalMap.textureValue ? _normalScale : null);
-			materialEditor.TextureScaleOffsetProperty(_albedoMap);
+            materialEditor.TextureScaleOffsetProperty(_albedoMap);
 
             EditorGUILayout.Space();
 
-			materialEditor.ShaderProperty(_occHeight, "Occlusion Height");
-            _heightToOcc.floatValue = 1.0f / _occHeight.floatValue;
-
-			materialEditor.ShaderProperty(_occExp, "Occ Exponent");
-			materialEditor.ShaderProperty(_occToColor, "Occ To Color");
+            materialEditor.ShaderProperty(_occHeight, "Occlusion Height");
+            materialEditor.ShaderProperty(_occExp, "Occlusion Exponent");
+            materialEditor.ShaderProperty(_occToColor, "Occlusion To Color");
 
             return EditorGUI.EndChangeCheck();
         }
 
-        static void SetMaterialKeywords(Material material)
+        static void CompleteMaterialChanges(Material material)
         {
+            var occh = Mathf.Max(material.GetFloat("_OccHeight"), 0.01f);
+            material.SetFloat("_HeightToOcc", 1.0f / occh);
+
             SetKeyword(material, "_ALBEDOMAP", material.GetTexture("_MainTex"));
             SetKeyword(material, "_NORMALMAP", material.GetTexture("_NormalMap"));
         }
