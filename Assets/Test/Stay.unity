@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: .683823526, g: .872196794, b: 1, a: 0}
   m_FogMode: 3
-  m_FogDensity: .0299999993
+  m_FogDensity: .0149999997
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: .211999997, g: .226999998, b: .259000003, a: 1}
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _subject: {fileID: 0}
-  _distance: 2
+  _distance: 2.01999998
   _fNumber: 2.79999995
   _useCameraFov: 1
   _focalLength: .0500000007
@@ -379,9 +379,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 876344073}
-  m_LocalRotation: {x: -.0492660142, y: .905442834, z: -.109570645, w: -.40711233}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: .999999881, y: 1, z: 1}
+  m_LocalRotation: {x: -.121917345, y: .816575646, z: -.187020794, w: -.532319069}
+  m_LocalPosition: {x: 0, y: 1.39999998, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 166874501}
   m_Father: {fileID: 0}
@@ -484,7 +484,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: .877146184
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalRotation.z
@@ -492,7 +492,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -1.62920685e-07
+      value: .480223417
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_RootOrder
@@ -556,9 +556,9 @@ MonoBehaviour:
   _extent: {x: 20, y: 20}
   _offset: {x: 0, y: 10}
   _randomPitchAngle: 36.4000015
-  _noisePitchAngle: 18.8999996
-  _rotationNoiseFrequency: .800000012
-  _rotationNoiseSpeed: .400000006
+  _noisePitchAngle: 5.5999999
+  _rotationNoiseFrequency: 2
+  _rotationNoiseSpeed: .519999981
   _rotationNoiseAxis: {x: 1, y: 0, z: 0}
   _baseScale: {x: 1, y: 2, z: 1}
   _minRandomScale: 1.18524361
@@ -580,7 +580,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1789495085}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.17999983, y: 0, z: -8}
+  m_LocalPosition: {x: -5.17999983, y: 0, z: -5.69999981}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
