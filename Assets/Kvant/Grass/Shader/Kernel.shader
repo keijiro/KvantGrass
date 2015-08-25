@@ -95,7 +95,7 @@ Shader "Hidden/Kvant/Grass/Kernel"
 
         // Noise to rotation
         float2 np = get_point(i.uv) * _RotationNoise.x;
-        float3 nc = float3(np.x, np.y, _RotationNoise.z);
+        float3 nc = float3(np.xy, _RotationNoise.z);
         float na = cnoise(nc) * _RotationNoise.y;
 
         // Getting a quaternion of it
@@ -114,7 +114,7 @@ Shader "Hidden/Kvant/Grass/Kernel"
 
         // Noise to scale factor
         float2 np = get_point(i.uv) * _ScaleNoise.x;
-        float3 nc = float3(np.x, np.y, -13.7 /* magic num */);
+        float3 nc = float3(np.xy, 0.92 /* magic num */);
         float s2 = cnoise(nc) * _ScaleNoise.y;
 
         return float4(_BaseScale * (s1 + s2), nrand(i.uv, 6));
