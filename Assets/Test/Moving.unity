@@ -399,12 +399,12 @@ MonoBehaviour:
   _maxRandomScale: 1.58320189
   _scaleNoiseAmplitude: .460000008
   _scaleNoiseFrequency: .879999995
+  _shapes:
+  - {fileID: 4300002, guid: fc6a34e7a0cb449f5b40f31834051a3b, type: 3}
+  - {fileID: 4300004, guid: fc6a34e7a0cb449f5b40f31834051a3b, type: 3}
   _material: {fileID: 2100000, guid: 7711acfb2b5e944dca6694790187339c, type: 2}
   _castShadows: 1
   _receiveShadows: 1
-  _defaultShapes:
-  - {fileID: 4300002, guid: fc6a34e7a0cb449f5b40f31834051a3b, type: 3}
-  - {fileID: 4300004, guid: fc6a34e7a0cb449f5b40f31834051a3b, type: 3}
   _defaultMaterial: {fileID: 2100000, guid: 3f215119d17f3496a9a46251be8bb9bc, type: 2}
   _kernelShader: {fileID: 4800000, guid: 1404e2fdeb8d34504b143c592d0817b3, type: 3}
 --- !u!4 &580364647

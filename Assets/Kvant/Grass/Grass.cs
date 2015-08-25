@@ -13,14 +13,14 @@ namespace Kvant
         #region Basic Properties
 
         [SerializeField]
-        float _density = 400;
+        float _density = 100;
 
         public float density {
             get { return _density; }
         }
 
         [SerializeField]
-        Vector2 _extent = new Vector2(20, 20);
+        Vector2 _extent = new Vector2(10, 10);
 
         public Vector2 extent {
             get { return _extent; }
@@ -128,6 +128,9 @@ namespace Kvant
         #region Render Settings
 
         [SerializeField]
+        Mesh[] _shapes;
+
+        [SerializeField]
         Material _material;
         bool _owningMaterial; // whether owning the material
 
@@ -171,7 +174,6 @@ namespace Kvant
 
         #region Built-in Resources
 
-        [SerializeField] Mesh[] _defaultShapes;
         [SerializeField] Material _defaultMaterial;
         [SerializeField] Shader _kernelShader;
 
@@ -247,9 +249,9 @@ namespace Kvant
         void ResetResources()
         {
             if (_bulkMesh == null)
-                _bulkMesh = new BulkMesh(_defaultShapes, InstancePerDraw);
+                _bulkMesh = new BulkMesh(_shapes, InstancePerDraw);
             else
-                _bulkMesh.Rebuild(_defaultShapes, InstancePerDraw);
+                _bulkMesh.Rebuild(_shapes, InstancePerDraw);
 
             if (_positionBuffer) DestroyImmediate(_positionBuffer);
             if (_rotationBuffer) DestroyImmediate(_rotationBuffer);

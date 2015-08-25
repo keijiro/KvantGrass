@@ -26,6 +26,7 @@ namespace Kvant
         SerializedProperty _scaleNoiseAmplitude;
         SerializedProperty _scaleNoiseFrequency;
 
+        SerializedProperty _shapes;
         SerializedProperty _material;
         SerializedProperty _castShadows;
         SerializedProperty _receiveShadows;
@@ -57,6 +58,7 @@ namespace Kvant
             _scaleNoiseAmplitude = serializedObject.FindProperty("_scaleNoiseAmplitude");
             _scaleNoiseFrequency = serializedObject.FindProperty("_scaleNoiseFrequency");
 
+            _shapes         = serializedObject.FindProperty("_shapes");
             _material       = serializedObject.FindProperty("_material");
             _castShadows    = serializedObject.FindProperty("_castShadows");
             _receiveShadows = serializedObject.FindProperty("_receiveShadows");
@@ -69,11 +71,8 @@ namespace Kvant
             serializedObject.Update();
 
             EditorGUI.BeginChangeCheck();
-
             EditorGUILayout.PropertyField(_density);
-
-            if (EditorGUI.EndChangeCheck())
-                instance.NotifyConfigChange();
+            if (EditorGUI.EndChangeCheck()) instance.NotifyConfigChange();
 
             EditorGUILayout.PropertyField(_extent);
             EditorGUILayout.PropertyField(_offset);
@@ -98,6 +97,11 @@ namespace Kvant
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Rendering", EditorStyles.boldLabel);
+
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(_shapes, true);
+            if (EditorGUI.EndChangeCheck()) instance.NotifyConfigChange();
+
             EditorGUILayout.PropertyField(_material);
             EditorGUILayout.PropertyField(_castShadows);
             EditorGUILayout.PropertyField(_receiveShadows);
