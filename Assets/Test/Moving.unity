@@ -430,8 +430,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe4d9cfcdfc2440f4ad305a6296d9d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yawAngle: 90
-  speed: 4
+  _yawAngle: 90
+  _speed: 4
 --- !u!1 &639827954
 GameObject:
   m_ObjectHideFlags: 0
