@@ -302,9 +302,9 @@ namespace Kvant
 
             // Make a material property block for the following drawcalls.
             var props = new MaterialPropertyBlock();
-            props.AddTexture("_PositionTex", _positionBuffer);
-            props.AddTexture("_RotationTex", _rotationBuffer);
-            props.AddTexture("_ScaleTex", _scaleBuffer);
+            props.SetTexture("_PositionTex", _positionBuffer);
+            props.SetTexture("_RotationTex", _rotationBuffer);
+            props.SetTexture("_ScaleTex", _scaleBuffer);
 
             // Temporary variables.
             var mesh = _bulkMesh.mesh;
@@ -317,7 +317,7 @@ namespace Kvant
             for (var i = 0; i < _positionBuffer.height; i++)
             {
                 uv.y = (0.5f + i) / _positionBuffer.height;
-                props.AddVector("_BufferOffset", uv);
+                props.SetVector("_BufferOffset", uv);
                 Graphics.DrawMesh(
                     mesh, position, rotation,
                     material, 0, null, 0, props,
